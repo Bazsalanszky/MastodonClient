@@ -26,10 +26,8 @@ class PublicTimelineView : View("Public timeline") {
     }
 
     init {
-        if (model.toots != null) {
-            for (toot in model.toots!!) {
-                tootBox += TootView(toot)
-            }
+        model.toots?.forEach {
+            tootBox += TootView(it)
         }
     }
 }

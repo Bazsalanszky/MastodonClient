@@ -2,12 +2,8 @@ package eu.toldi.mastodon.view
 
 import eu.toldi.mastodon.helpers.ApiHelper
 import eu.toldi.mastodon.helpers.BrowserHelper
-import javafx.scene.Parent
 import javafx.scene.text.TextAlignment
 import tornadofx.*
-import java.awt.Desktop
-import java.net.URI
-import java.net.URL
 
 class LoginView : View("MastodonKlient: Login") {
     override val root = flowpane {
@@ -17,11 +13,18 @@ class LoginView : View("MastodonKlient: Login") {
                 textAlignment = TextAlignment.CENTER
             }
             hbox {
-                val text = textfield() {
+                val instanceField = textfield() {
                     promptText = "Eg: mastodon.social, fosstodon.org"
                 }
                 button("Login") {
-                    val api = ApiHelper(text.cont)
+                    setOnAction {
+                        val api = ApiHelper(instanceField.text)
+                        val c = api.registerApp()
+                        if(c == null)
+                            throw IllegalArgumentException("Registration Failed!")
+                    }
+
+
                 }
             }
             textflow {
