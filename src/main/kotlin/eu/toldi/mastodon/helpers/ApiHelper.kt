@@ -18,6 +18,7 @@ class ApiHelper (host: String){
         val accounts = base+"/accounts"
         val timelines = base+"/timelines"
         val pubicTimeline = timelines+"/public"
+        val apps = base+"/apps"
     }
     val client = HttpClient(Apache) {
         install(JsonFeature)

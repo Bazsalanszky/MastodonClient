@@ -26,14 +26,12 @@ class TootView(val t:Toot) : View("My View") {
                     engine.loadContent(t.content)
                     engine.loadWorker.stateProperty().onChange {
                         val wh = engine.executeScript("document.documentElement.scrollHeight").toString().toDouble()
-                        println(wh)
                         prefHeight = wh
                     }
                 }
                 widthProperty().onChange {
                     w.prefWidth = it
                     val wh = w.engine.executeScript("document.documentElement.scrollHeight").toString().toDouble()
-                    println(wh)
                     w.prefHeight = wh
                 }
             }
