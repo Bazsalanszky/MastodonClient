@@ -2,17 +2,15 @@ package eu.toldi.mastodon.main
 
 import eu.toldi.mastodon.Styles
 import eu.toldi.mastodon.helpers.ApiHelper
-import eu.toldi.mastodon.view.PublicTimeLineModel
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.scene.control.Label
-import javafx.util.converter.NumberStringConverter
+import eu.toldi.mastodon.view.PublicTimelineModel
+import eu.toldi.mastodon.view.TimelineModel
 import tornadofx.*
 
 class MainView : View("Mastodon") {
 
     private val controller: MainController by inject()
 
-    private val model = PublicTimeLineModel()
+    private val model = PublicTimelineModel(ApiHelper("s.toldi.eu"))
 
     override val root = vbox {
         label(title) {

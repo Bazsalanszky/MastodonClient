@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import eu.toldi.mastodon.entities.Client
+import eu.toldi.mastodon.entities.LoginAccount
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.features.json.*
@@ -26,6 +27,9 @@ class ApiHelper (host: String){
         val timelines = base+"/timelines"
         val pubicTimeline = timelines+"/public"
         val apps = base+"/apps"
+        val oauth = "/oauth"
+        val authorize = oauth+"/authorize"
+        val token = oauth+"/token"
     }
     val client = HttpClient(Apache) {
         install(JsonFeature)
@@ -39,10 +43,9 @@ class ApiHelper (host: String){
         return result;
     }
 
-     fun registerApp(): Client?{
-         var result: Client? = null
-         runBlocking {
-             val response = client.submitForm<Client>(
+     fun registerApp(): Client {
+         return runBlocking {
+             client.submitForm (
                  formParameters = Parameters.build {
                      append("client_name", "MastodonKlient")
                      append("redirect_uris", "urn:ietf:wg:oauth:2.0:oob")
@@ -51,8 +54,23 @@ class ApiHelper (host: String){
                  },
                  url = hostURL+apps
              )
-             result = response;
          }
-         return result
     }
+
+    fun getAccessToken(c: Client,code: String) : LoginAccount.AuthToken{
+        return runBlocking {
+            client.submitForm (
+                formParameters = Parameters.build {
+                    append("client_id", c.client_id)
+                    append("client_secret",c.client_secret)
+                    append("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
+                    append("scopes", "read write follow push")
+                    append("code",code)
+                    append("grant_type", "authorization_code")
+                },
+                url = hostURL+ token
+            )
+        }
+    }
+
 }

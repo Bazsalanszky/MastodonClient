@@ -2,7 +2,7 @@ package eu.toldi.mastodon.entities
 
 import kotlin.properties.Delegates
 
-data class Account(val id: Long){
+open class Account(val id: String){
     lateinit var username: String
     lateinit var display_name: String
     lateinit var acct: String
