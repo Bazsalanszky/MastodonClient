@@ -14,6 +14,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import kotlinx.coroutines.runBlocking
+import java.io.InvalidObjectException
 
 class ApiHelper (host: String){
      val hostURL :String = when {
@@ -24,8 +25,10 @@ class ApiHelper (host: String){
     companion object MastodonAPI {
         val base = "/api/v1"
         val accounts = base+"/accounts"
+        val accounts_verify_credentials = accounts+"/verify_credentials"
         val timelines = base+"/timelines"
         val pubicTimeline = timelines+"/public"
+        val homeTimeline = timelines+"/home"
         val apps = base+"/apps"
         val oauth = "/oauth"
         val authorize = oauth+"/authorize"
@@ -35,10 +38,15 @@ class ApiHelper (host: String){
         install(JsonFeature)
     }
 
-    inline fun <reified T> get(path: String): T? {
+    inline fun <reified T> get(path: String,headers: Map<String,String> = HashMap() ): T? {
         var result :T? = null
         runBlocking {
-            result = client.get(hostURL + path)
+            val builder : HttpRequestBuilder = HttpRequestBuilder()
+            builder.url(hostURL+path)
+            for((k,v) in headers){
+                builder.headers.append(k,v)
+            }
+            result = client.get(builder)
         }
         return result;
     }
@@ -64,13 +72,19 @@ class ApiHelper (host: String){
                     append("client_id", c.client_id)
                     append("client_secret",c.client_secret)
                     append("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
-                    append("scopes", "read write follow push")
-                    append("code",code)
                     append("grant_type", "authorization_code")
+                    append("code",code)
+                    append("scopes", "read write follow push")
                 },
                 url = hostURL+ token
             )
         }
+    }
+
+    fun constructLoginAccount(token: LoginAccount.AuthToken) :LoginAccount {
+        val result: LoginAccount = get(ApiHelper.accounts_verify_credentials, mapOf("Authorization" to "Bearer ${token.access_token}")) ?: throw InvalidObjectException("Failed to create Login Account")
+        result.token = token
+        return result
     }
 
 }

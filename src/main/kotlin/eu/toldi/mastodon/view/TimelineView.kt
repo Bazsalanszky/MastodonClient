@@ -8,7 +8,7 @@ import tornadofx.*
 
 class TimelineView(val model: TimelineModel) : View() {
     private val controller: MainController by inject()
-    
+
     private lateinit var tootBox: VBox
     override val root = borderpane {
         top {

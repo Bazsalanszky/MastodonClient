@@ -6,52 +6,68 @@ import eu.toldi.mastodon.helpers.ApiHelper
 import eu.toldi.mastodon.helpers.BrowserHelper
 import io.ktor.client.features.*
 import io.ktor.client.request.forms.*
+import io.ktor.http.*
+import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.control.TextInputDialog
 import javafx.scene.text.TextAlignment
+import javafx.stage.Stage
+import kotlinx.coroutines.runBlocking
 import tornadofx.*
 
 
 class LoginView : View("MastodonKlient: Login") {
     override val root = flowpane {
-        vbox{
+        vbox {
             paddingAll = 16.0
-            text("Instance:"){
+            text("Instance:") {
                 textAlignment = TextAlignment.CENTER
             }
             hbox {
-                val instanceField = textfield() {
-                    promptText = "Eg: mastodon.social, fosstodon.org"
-                }
-                button("Login") {
-                    setOnAction {
-                        val api = ApiHelper(instanceField.text)
-                        val c : Client
-                        try {
-                            c = api.registerApp()
-                        } catch (e: Exception) {
-                            alert(
-                                Alert.AlertType.ERROR,
-                                "Client Error",
-                                "Error during client registration:${e.message}"
-                            )
-                            return@setOnAction
-                        }
-                        BrowserHelper.openLink("${api.hostURL}${ApiHelper.authorize}?client_id=${c.client_id}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code")
-                        val dialog = TextInputDialog("")
-                        dialog.title = "Authentication token"
-                        dialog.headerText = "Please login, then enter your authentication token"
-                        dialog.contentText = "Authentication token:"
-                        val result = dialog.showAndWait()
-                        if (result.isPresent) {
-                            val code = result.get()
-                            println(code)
-                            val token = api.getAccessToken(c,code)
-                            println("${token.access_token} ${token.token_type} ${token.scope} ${token.created_at}")
-                        }
+                form {
+                    val instanceField = textfield() {
+                        promptText = "Eg: mastodon.social, fosstodon.org"
                     }
+                    button("Login") {
+                        setOnAction {
+                            val api = ApiHelper(instanceField.text)
+                            val c: Client
+                            try {
+                                c = api.registerApp()
+                            } catch (e: Exception) {
+                                alert(
+                                    Alert.AlertType.ERROR,
+                                    "Client Error",
+                                    "Error during client registration:${e.message}"
+                                )
+                                return@setOnAction
+                            }
+                            BrowserHelper.openLink("${api.hostURL}${ApiHelper.authorize}?client_id=${c.client_id}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code")
+                            val dialog = TextInputDialog("")
+                            dialog.title = "Authentication token"
+                            dialog.headerText = "Please login, then enter your authentication token"
+                            dialog.contentText = "Authentication token:"
+                            val result = dialog.showAndWait()
+                            if (result.isPresent) {
+                                val code = result.get()
+                                val token = api.getAccessToken(c, code)
+                                val account: LoginAccount
+                                try {
+                                    account = api.constructLoginAccount(token)
+                                    val mainView = MainView(MainModel(c, account, api))
+                                    replaceWith(mainView)
+                                } catch (e: Exception) {
+                                    alert(
+                                        Alert.AlertType.ERROR,
+                                        "Auth Error",
+                                        "Error during logging you in:${e.message}"
+                                    )
+                                    return@setOnAction
+                                }
+                            }
+                        }
 
-
+                    }
                 }
             }
             textflow {
