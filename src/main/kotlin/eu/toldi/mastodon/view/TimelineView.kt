@@ -6,10 +6,9 @@ import eu.toldi.mastodon.main.MainController
 import javafx.scene.layout.VBox
 import tornadofx.*
 
-class PublicTimelineView(helper: ApiHelper) : View("Public timeline") {
+class TimelineView(val model: TimelineModel) : View() {
     private val controller: MainController by inject()
-
-    private val model = PublicTimelineModel(helper)
+    
     private lateinit var tootBox: VBox
     override val root = borderpane {
         top {
