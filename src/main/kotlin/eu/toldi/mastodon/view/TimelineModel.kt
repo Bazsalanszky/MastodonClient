@@ -6,4 +6,5 @@ import tornadofx.ViewModel
 
 abstract class TimelineModel(val helper: ApiHelper) : ViewModel() {
     abstract val toots: List<Toot>
+    abstract fun loadMoreToots():  List<Toot>
 }

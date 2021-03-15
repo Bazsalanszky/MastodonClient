@@ -1,9 +1,11 @@
 package eu.toldi.mastodon.view
 
+import com.google.gson.GsonBuilder
 import eu.toldi.mastodon.entities.Client
 import eu.toldi.mastodon.entities.LoginAccount
 import eu.toldi.mastodon.helpers.ApiHelper
 import eu.toldi.mastodon.helpers.BrowserHelper
+import eu.toldi.mastodon.helpers.ConfigHelper
 import io.ktor.client.features.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
@@ -12,11 +14,15 @@ import javafx.scene.control.Alert
 import javafx.scene.control.TextInputDialog
 import javafx.scene.text.TextAlignment
 import javafx.stage.Stage
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import tornadofx.*
+import java.io.File
+import java.lang.reflect.Modifier
 
 
 class LoginView : View("MastodonKlient: Login") {
+
     override val root = flowpane {
         vbox {
             paddingAll = 16.0
@@ -52,6 +58,8 @@ class LoginView : View("MastodonKlient: Login") {
                                 val code = result.get()
                                 val token = api.getAccessToken(c, code)
                                 val account: LoginAccount
+                                val config = ConfigHelper(c,token,api)
+                                config.toFile("auth.json")
                                 try {
                                     account = api.constructLoginAccount(token)
                                     val mainView = MainView(MainModel(c, account, api))
@@ -60,8 +68,9 @@ class LoginView : View("MastodonKlient: Login") {
                                     alert(
                                         Alert.AlertType.ERROR,
                                         "Auth Error",
-                                        "Error during logging you in:${e.message}"
+                                        "Error during logging you in:${e.message} ${e.stackTrace}"
                                     )
+                                    e.printStackTrace()
                                     return@setOnAction
                                 }
                             }
@@ -77,7 +86,21 @@ class LoginView : View("MastodonKlient: Login") {
                         BrowserHelper.openLink("https://joinmastodon.org/communities")
                     }
                 }
+
             }
         }
     }
+
+    init {
+        try{
+            val gson = GsonBuilder().create()
+            val conf = gson.fromJson<ConfigHelper>(File("auth.json").readText(),ConfigHelper::class.java)
+            val mainView = MainView(conf.createMainModel())
+            mainView.openWindow()
+            (root.scene.window as Stage).close()
+        }catch(e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

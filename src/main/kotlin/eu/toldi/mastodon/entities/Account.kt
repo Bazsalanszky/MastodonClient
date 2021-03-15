@@ -1,7 +1,9 @@
 package eu.toldi.mastodon.entities
 
-open class Account(val id: String){
+import com.google.gson.annotations.Expose
 
+open class Account(val id: String){
+    @Expose
     lateinit var acct: String
     lateinit var avatar :String
     lateinit var avatar_static :String

@@ -35,7 +35,7 @@ class MainView(val model: MainModel) : View("MasotodonKlinet") {
     }
 
     init {
-        h_box += TimelineView(HomeTimelineModel(model.apiHelper,model.account))
+//        h_box += TimelineView(HomeTimelineModel(model.apiHelper,model.account))
         f_box += TimelineView(PublicTimelineModel(model.apiHelper))
         l_box += TimelineView(LocalTimelineModel(model.apiHelper))
     }
