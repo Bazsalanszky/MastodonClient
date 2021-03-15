@@ -98,6 +98,7 @@ class LoginView : View("MastodonKlient: Login") {
             val mainView = MainView(conf.createMainModel())
             mainView.openWindow()
             (root.scene.window as Stage).close()
+            close() // TODO: Záródjon be tényleg
         }catch(e: Exception) {
             e.printStackTrace()
         }
