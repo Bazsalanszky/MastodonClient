@@ -2,27 +2,27 @@ package eu.toldi.mastodon.entities
 
 import com.google.gson.annotations.Expose
 
-open class Account(val id: String){
-    @Expose
-    lateinit var acct: String
-    lateinit var avatar :String
-    lateinit var avatar_static :String
-    var bot = false
-    lateinit var created_at :String
-    var discoverable = false
-    lateinit var display_name: String
-    lateinit var emojis :List<Emoji>
-    lateinit var field: List<metadataField>
-    var followers_count = 0
-    var following_count = 0
-    var group = false
-    lateinit var header: String
-    lateinit var header_static: String
-    var locked = false
-    lateinit var note: String
-    var statuses_count = 0
-    lateinit var url: String
-    lateinit var username: String
+open class Account(val id: String,
+                   @Expose
+    val acct: String,
+                   val avatar :String,
+                   val avatar_static :String,
+                   val bot: Boolean = false,
+                   val created_at :String,
+                   val discoverable: Boolean = false,
+                   val display_name: String,
+                   val emojis :List<Emoji>,
+                   val field: List<metadataField>,
+                   val followers_count: Int = 0,
+                   var following_count: Int = 0,
+                   val group: Boolean = false,
+                   val header: String,
+                   val header_static: String,
+                   var locked: Boolean = false,
+                   val note: String,
+                   val statuses_count: Int = 0,
+                   val url: String,
+                   val username: String) {
 
     data class metadataField(val name:String, val value: String, val verified_at: String)
 }

@@ -19,6 +19,7 @@ import kotlinx.coroutines.runBlocking
 import tornadofx.*
 import java.io.File
 import java.lang.reflect.Modifier
+import java.util.regex.Pattern
 
 
 class LoginView : View("MastodonKlient: Login") {
@@ -92,16 +93,20 @@ class LoginView : View("MastodonKlient: Login") {
     }
 
     init {
+
+    }
+
+    override fun onBeforeShow() {
+        super.onBeforeShow()
         try{
             val gson = GsonBuilder().create()
             val conf = gson.fromJson<ConfigHelper>(File("auth.json").readText(),ConfigHelper::class.java)
-            val mainView = MainView(conf.createMainModel())
-            mainView.openWindow()
-            (root.scene.window as Stage).close()
-            close() // TODO: Záródjon be tényleg
+            val stage = primaryStage;
+            val scene = Scene(MainView(conf.createMainModel()).root)
+            stage.scene = scene
+            stage.show()
         }catch(e: Exception) {
             e.printStackTrace()
         }
     }
-
 }

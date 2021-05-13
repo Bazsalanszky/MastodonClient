@@ -13,6 +13,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import java.io.InvalidObjectException
+import java.lang.IllegalArgumentException
 
 class ApiHelper (host: String){
     @Expose
@@ -20,8 +21,8 @@ class ApiHelper (host: String){
          host.startsWith("http://") || host.startsWith("https://") -> host
          else -> "https://$host"
      }
-
-    val client: HttpClient
+    @PublishedApi
+    internal val client: HttpClient
 
     init {
         client = HttpClient(Apache) {
@@ -45,17 +46,22 @@ class ApiHelper (host: String){
     }
 
 
-    inline fun <reified T> get(path: String,headers: Map<String,String> = HashMap() ): T? {
+     inline fun <reified T: Any> get(path: String, headers: Map<String,String> = HashMap() ): T {
         var result :T? = null
         runBlocking {
-            val builder : HttpRequestBuilder = HttpRequestBuilder()
+            val builder = HttpRequestBuilder()
             builder.url(hostURL+path)
             for((k,v) in headers){
                 builder.headers.append(k,v)
             }
             result = client.get(builder)
         }
-        return result
+        return result ?: throw IllegalArgumentException("")
+    }
+
+
+     inline fun <reified T: Any> authedGet(path: String, token:String): T {
+        return get<T>(path,mapOf("Authorization" to "Bearer $token"))
     }
 
      fun registerApp(): Client {

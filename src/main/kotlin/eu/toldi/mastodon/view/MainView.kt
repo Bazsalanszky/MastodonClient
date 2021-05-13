@@ -2,6 +2,7 @@ package eu.toldi.mastodon.view
 
 import eu.toldi.mastodon.Styles
 import eu.toldi.mastodon.helpers.ApiHelper
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import tornadofx.*
 
@@ -17,7 +18,7 @@ class MainView(val model: MainModel) : View("MasotodonKlinet") {
                 }
             }
         }
-        item("Local"){
+        item("Local") {
             l_box = vbox {
                 label("Local Timeline") {
                     addClass(Styles.heading)
@@ -35,8 +36,8 @@ class MainView(val model: MainModel) : View("MasotodonKlinet") {
     }
 
     init {
-//        h_box += TimelineView(HomeTimelineModel(model.apiHelper,model.account))
+        h_box += TimelineView(HomeTimelineModel(model.apiHelper,model.account))
         f_box += TimelineView(PublicTimelineModel(model.apiHelper))
-        l_box += TimelineView(LocalTimelineModel(model.apiHelper))
+        l_box +=TimelineView(LocalTimelineModel(model.apiHelper))
     }
 }

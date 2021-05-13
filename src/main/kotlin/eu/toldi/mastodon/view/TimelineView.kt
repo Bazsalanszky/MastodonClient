@@ -13,9 +13,13 @@ class TimelineView(val model: TimelineModel) : View() {
 
     private lateinit var tootBox: VBox
     override val root = borderpane {
-        top {
-            label("Public Timeline") {
-                addClass(Styles.heading)
+        left {
+            flowpane{
+            }
+        }
+        right {
+            flowpane{
+
             }
         }
         center {
@@ -39,6 +43,7 @@ class TimelineView(val model: TimelineModel) : View() {
                 }
             }
         }
+
     }
 
     init {
