@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose
 import eu.toldi.mastodon.entities.Client
 import eu.toldi.mastodon.entities.LoginAccount
 import eu.toldi.mastodon.entities.Token
-import eu.toldi.mastodon.view.MainModel
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.features.json.*
@@ -12,7 +11,6 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
-import java.io.InvalidObjectException
 import java.lang.IllegalArgumentException
 
 class ApiHelper (host: String){
@@ -22,12 +20,8 @@ class ApiHelper (host: String){
          else -> "https://$host"
      }
     @PublishedApi
-    internal val client: HttpClient
-
-    init {
-        client = HttpClient(Apache) {
-            install(JsonFeature)
-        }
+    internal val client: HttpClient = HttpClient(Apache) {
+        install(JsonFeature)
     }
 
 
@@ -94,15 +88,17 @@ class ApiHelper (host: String){
         }
     }
 
-    fun constructLoginAccount(token: Token) :LoginAccount {
-        val result: LoginAccount = get(accounts_verify_credentials, mapOf("Authorization" to "Bearer ${token.access_token}")) ?: throw InvalidObjectException("Failed to create Login Account")
-        result.token = token
-        return result
+    fun constructLoginAccount(token: Token): LoginAccount {
+        return LoginAccount(
+            token,
+            get(accounts_verify_credentials, mapOf("Authorization" to "Bearer ${token.access_token}"))
+        ).also {
+            println("Logged in as ${it.account.acct}")
+        }
     }
 
-    fun constructClient(token: Token) :Client {
-        val result: Client = get(apps_verify_credentials, mapOf("Authorization" to "Bearer ${token.access_token}")) ?: throw InvalidObjectException("Failed to create Login Account")
-        return result
+    fun constructClient(token: Token): Client {
+        return get(apps_verify_credentials, mapOf("Authorization" to "Bearer ${token.access_token}"))
     }
 
 }

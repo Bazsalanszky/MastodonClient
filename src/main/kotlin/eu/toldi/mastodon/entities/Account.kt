@@ -2,7 +2,7 @@ package eu.toldi.mastodon.entities
 
 import com.google.gson.annotations.Expose
 
-open class Account(val id: String,
+data class Account(val id: String,
                    @Expose
     val acct: String,
                    val avatar :String,
