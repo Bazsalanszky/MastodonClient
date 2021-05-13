@@ -5,8 +5,7 @@ import eu.toldi.mastodon.helpers.ApiHelper
 import java.io.InvalidObjectException
 
 class PublicTimelineModel(helper: ApiHelper) : TimelineModel(helper) {
-    override var toots: MutableList<Toot> = helper.get<MutableList<Toot>>(ApiHelper.pubicTimeline)
-        ?: throw InvalidObjectException("Helper cannot be null")
+    override var toots: MutableList<Toot> = helper.get(ApiHelper.pubicTimeline)
 
     override fun loadMoreToots(): List<Toot> {
         val newToots = helper.get<List<Toot>>(ApiHelper.pubicTimeline+"?max_id=${toots.last().id}") ?: throw InvalidObjectException("Failed to load more toots")
