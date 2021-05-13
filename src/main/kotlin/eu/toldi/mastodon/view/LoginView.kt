@@ -22,7 +22,7 @@ import java.lang.reflect.Modifier
 import java.util.regex.Pattern
 
 
-class LoginView : View("MastodonKlient: Login") {
+class LoginView : View("Mastodon Client") {
 
     override val root = flowpane {
         vbox {
