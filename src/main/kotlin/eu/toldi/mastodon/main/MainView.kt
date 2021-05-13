@@ -19,13 +19,11 @@ class MainView : View("Mastodon") {
         label("Public Timeline")
 
         var cucc = vbox {
-            if(model.toots != null)  {
-                for( toot in model.toots!!){
+            for( toot in model.toots){
+                vbox {
+                    label(toot.account.display_name)
                     vbox {
-                        label(toot.account.display_name)
-                        vbox {
-                            text(toot.content)
-                        }
+                        text(toot.content)
                     }
                 }
             }
