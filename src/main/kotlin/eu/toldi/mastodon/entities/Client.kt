@@ -3,15 +3,19 @@ package eu.toldi.mastodon.entities
 import com.google.gson.annotations.Expose
 
 
-data class Client(@Expose val client_id: String,@Expose val client_secret: String) {
+data class Client(
     @Expose
-    lateinit var id: String
+    val client_id: String,
     @Expose
-    lateinit var name: String
+    val client_secret: String,
     @Expose
-    lateinit var redirect_uri: String
+    val id: String,
     @Expose
-    lateinit var vapid_key: String
+    val name: String,
     @Expose
-    lateinit var website: String
-}
+    val redirect_uri: String,
+    @Expose
+    val vapid_key: String,
+    @Expose
+    val website: String
+)
