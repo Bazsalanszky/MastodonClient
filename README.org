@@ -1,0 +1,29 @@
+#+TITLE: Mastodon Client
+#+AUTHOR: Toldi Balázs Ádám
+#+AUTHOR: GXQQMA
+
+* Mastodon Client
+
+Ez a projekt a Kotlin alapú szoftverfejlesztés című
+tárgy 2021. tavaszi félévében készített házi feladatomat
+tartalmazza. Ebben egy egyszerű [[https://docs.joinmastodon.org/][Mastodon]] klienst valósítottam meg
+TornadoFX és Ktor alapokon.
+
+** Szükséges elemek a használatához
+- Java 11
+- Masotodn fiók egy tetszőleges példányon  (instance; pl.: mastodon.social,
+  fosstodon.org)
+
+** Használata
+Indításkor egy bejelentkező képernyő jelenik meg, ahol csak a fiókunk
+által használt példány doménjét kell megadni (tehát https nélkül)
+
+A "Login" gombra kattintás után a megnyílt böngésző ablakban be kell
+jelentkezni, valamint engedélyt kell adni a kliensnek a fiók
+használatára. Ekkor megjelenik egy autentikációs szöveg, amit a
+program felugró ablakába kell bemásolni. Ha minden sikeres volt a fiók
+használatához szükséges tokent egy "auth.json" nevű fájlba menti, így
+ha legközelebb megnyitjuk ezen nem kell újra végigmenni.
+
+Bejelentkezés után Föderált idővonal jelenik meg. Erről a bal oldalon
+található panellel válthatunk a "Home" vagy "Local" idővonalra.
