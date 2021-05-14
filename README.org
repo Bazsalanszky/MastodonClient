@@ -2,19 +2,18 @@
 #+AUTHOR: Toldi Balázs Ádám
 #+AUTHOR: GXQQMA
 
-* Mastodon Client
 
 Ez a projekt a Kotlin alapú szoftverfejlesztés című
 tárgy 2021. tavaszi félévében készített házi feladatomat
 tartalmazza. Ebben egy egyszerű [[https://docs.joinmastodon.org/][Mastodon]] klienst valósítottam meg
 TornadoFX és Ktor alapokon.
 
-** Szükséges elemek a használatához
+* Szükséges elemek a használatához
 - Java 11
 - Masotodn fiók egy tetszőleges példányon  (instance; pl.: mastodon.social,
   fosstodon.org)
 
-** Használata
+* Használata
 Indításkor egy bejelentkező képernyő jelenik meg, ahol csak a fiókunk
 által használt példány doménjét kell megadni (tehát https nélkül)
 
