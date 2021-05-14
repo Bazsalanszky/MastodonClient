@@ -6,10 +6,12 @@ import eu.toldi.mastodon.helpers.ApiHelper
 import java.io.InvalidObjectException
 
 class HomeTimelineModel(helper: ApiHelper,val account: LoginAccount) :TimelineModel(helper) {
-    override var toots: MutableList<Toot> = helper.authedGet(ApiHelper.homeTimeline,account.token.access_token)
 
     override fun loadMoreToots(): List<Toot> {
-        val newToots = helper.authedGet<List<Toot>>(ApiHelper.homeTimeline+"?max_id=${toots.last().id}",account.token.access_token)
+        val addition = if(toots.size > 0){
+            "?max_id=${toots.last().id}"
+        }else ""
+        val newToots = helper.authedGet<List<Toot>>(ApiHelper.homeTimeline+addition,account.token.access_token)
         toots.addAll(newToots)
         return newToots
     }

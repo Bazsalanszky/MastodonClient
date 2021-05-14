@@ -1,22 +1,19 @@
 package eu.toldi.mastodon.view
 
 import eu.toldi.mastodon.Styles
-import eu.toldi.mastodon.helpers.ApiHelper
-import javafx.collections.MapChangeListener
 import javafx.geometry.Pos
-import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.*
 
-class MainView : View("MasotodonKlinet") {
-    lateinit var model: MainModel
-    lateinit var h_box: VBox
-    lateinit var l_box: VBox
-    lateinit var f_box: VBox
+class MainView : View("Masotodon Client") {
+    private lateinit var model: MainModel
+    private lateinit var hBox: VBox
+    private lateinit var lBox: VBox
+    private lateinit var fBox: VBox
     override val root = drawer {
-        style = "-fx-background-color: #191b22;"
+        addClass(Styles.background)
         item("Home") {
             vbox {
                 vbox {
@@ -26,13 +23,13 @@ class MainView : View("MasotodonKlinet") {
                     }
                     alignment = Pos.CENTER
                 }
-                h_box = vbox {
+                hBox = vbox {
 
                 }
             }
         }
         item("Local") {
-            l_box = vbox {
+            lBox = vbox {
                 vbox {
                     label("Local Timeline") {
                         font = Font.font(20.0)
@@ -44,7 +41,7 @@ class MainView : View("MasotodonKlinet") {
 
         }
         item("Federated", expanded = true) {
-            f_box = vbox {
+            fBox = vbox {
                 vbox {
                     label("Federated Timeline") {
                         font = Font.font(20.0)
@@ -58,9 +55,9 @@ class MainView : View("MasotodonKlinet") {
 
     fun init(mainModel: MainModel) {
         model = mainModel
-        h_box += TimelineView(HomeTimelineModel(model.apiHelper, model.account))
-        f_box += TimelineView(PublicTimelineModel(model.apiHelper))
-        l_box += TimelineView(LocalTimelineModel(model.apiHelper))
+        hBox += TimelineView(HomeTimelineModel(model.apiHelper, model.account))
+        fBox += TimelineView(PublicTimelineModel(model.apiHelper))
+        lBox += TimelineView(LocalTimelineModel(model.apiHelper))
 
     }
 

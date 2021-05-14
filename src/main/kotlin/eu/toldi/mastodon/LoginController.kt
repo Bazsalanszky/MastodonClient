@@ -10,14 +10,13 @@ import eu.toldi.mastodon.view.MainModel
 import eu.toldi.mastodon.view.MainView
 import javafx.scene.control.Alert
 import tornadofx.Controller
-import tornadofx.Stylesheet.Companion.alert
 import tornadofx.alert
 import java.io.File
 
-class LoginController :Controller() {
+class LoginController : Controller() {
 
-    val loginView :LoginView by inject()
-    val mainView :MainView by inject()
+    private val loginView :LoginView by inject()
+    private val mainView :MainView by inject()
 
     fun init() {
         with(config) {
@@ -59,14 +58,14 @@ class LoginController :Controller() {
     private fun loginWithFile() :Boolean {
         try{
             val gson = GsonBuilder().create()
-            val file = File("auth1.json")
+            val file = File("auth.json")
             if(file.exists()) {
-                val conf = gson.fromJson<ConfigHelper>(file.readText(), ConfigHelper::class.java)
+                val conf = gson.fromJson(file.readText(), ConfigHelper::class.java)
                 mainView.init(conf.createMainModel())
                 return true
             }
         }catch(e: Exception) {
-            //e.printStackTrace()
+            // Ez nem egy fontos hiba
         }
         return false
     }

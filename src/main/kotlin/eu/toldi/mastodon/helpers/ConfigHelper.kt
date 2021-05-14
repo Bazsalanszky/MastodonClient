@@ -7,11 +7,10 @@ import eu.toldi.mastodon.view.MainModel
 import java.io.File
 
 
-class ConfigHelper(client: Client, token: Token, apiHelper: ApiHelper) {
-    val client_id = client.client_id
-    val client_secret = client.client_secret
-    val instance = apiHelper.hostURL
-    val access_token = token
+class ConfigHelper(client: Client, private val access_token: Token, apiHelper: ApiHelper) {
+    private val client_id = client.client_id
+    private val client_secret = client.client_secret
+    private val instance = apiHelper.hostURL
 
     fun createMainModel() : MainModel {
         val api = ApiHelper(instance)

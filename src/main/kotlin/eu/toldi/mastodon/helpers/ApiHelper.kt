@@ -62,7 +62,7 @@ class ApiHelper (host: String){
          return runBlocking {
              client.submitForm<Client> (
                  formParameters = Parameters.build {
-                     append("client_name", "MastodonKlient")
+                     append("client_name", "Mastodon Client")
                      append("redirect_uris", "urn:ietf:wg:oauth:2.0:oob")
                      append("scopes", "read write follow push")
                      append("website", "https://github.com/Bazsalanszky/MastodonKlient")

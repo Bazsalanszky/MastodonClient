@@ -15,7 +15,7 @@ import java.util.regex.Pattern
 import javax.xml.parsers.DocumentBuilderFactory
 
 
-class TootView(val t: Toot) : View("My View") {
+class TootView(private val t: Toot) : View("My View") {
     private lateinit var textFlow: TextFlow
     override val root = borderpane {
         paddingAll = 10.0

@@ -1,12 +1,10 @@
 package eu.toldi.mastodon.view
 
 import eu.toldi.mastodon.Styles
-import eu.toldi.mastodon.main.MainController
 import javafx.geometry.Insets
 import javafx.scene.control.ScrollBar
 import javafx.scene.control.ScrollPane
 import javafx.scene.layout.VBox
-import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import kotlinx.coroutines.Dispatchers
@@ -15,8 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tornadofx.*
 
-class TimelineView(val model: TimelineModel) : View() {
-    private val controller: MainController by inject()
+class TimelineView(private val model: TimelineModel) : View() {
 
     private lateinit var tootBox: VBox
     override val root = borderpane {
@@ -24,6 +21,8 @@ class TimelineView(val model: TimelineModel) : View() {
 
         center {
             scrollpane {
+                minHeight = 800.0
+                minWidth = 800.0
                 isFitToWidth = true
                 isFitToHeight = true
                 vbox {
@@ -45,11 +44,7 @@ class TimelineView(val model: TimelineModel) : View() {
                         alignment = Pos.CENTER
                     }
                 }
-                style = "-fx-border-radius: 10;" +
-                        "-fx-border-width:5;" +
-                        "-fx-border-color: #191b22;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-background-color: #191b22;"
+                addClass(Styles.scrollable)
                 skinProperty().onChange {
                     this.lookupAll(".scroll-bar").map { it as ScrollBar }.forEach { bar ->
                         bar.valueProperty().onChange {
@@ -75,8 +70,14 @@ class TimelineView(val model: TimelineModel) : View() {
     }
 
     init {
-        model.toots?.forEach {
-            tootBox += TootView(it)
+        GlobalScope.launch(Dispatchers.IO) {
+            // Initial toot load
+            model.loadMoreToots()
+            withContext(Dispatchers.Main){
+                model.toots.forEach {
+                    tootBox += TootView(it)
+                }
+            }
         }
     }
 }

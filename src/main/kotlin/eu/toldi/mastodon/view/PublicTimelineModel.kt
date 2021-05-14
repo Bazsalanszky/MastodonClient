@@ -5,10 +5,13 @@ import eu.toldi.mastodon.helpers.ApiHelper
 import java.io.InvalidObjectException
 
 class PublicTimelineModel(helper: ApiHelper) : TimelineModel(helper) {
-    override var toots: MutableList<Toot> = helper.get(ApiHelper.pubicTimeline)
+
 
     override fun loadMoreToots(): List<Toot> {
-        val newToots = helper.get<List<Toot>>(ApiHelper.pubicTimeline+"?max_id=${toots.last().id}") ?: throw InvalidObjectException("Failed to load more toots")
+        val addition = if(toots.size > 0){
+            "?max_id=${toots.last().id}"
+        }else ""
+        val newToots = helper.get<List<Toot>>(ApiHelper.pubicTimeline+addition)
         toots.addAll(newToots)
         return newToots
     }
