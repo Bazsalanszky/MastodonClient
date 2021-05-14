@@ -9,7 +9,7 @@ class HomeTimelineModel(helper: ApiHelper,val account: LoginAccount) :TimelineMo
     override var toots: MutableList<Toot> = helper.authedGet(ApiHelper.homeTimeline,account.token.access_token)
 
     override fun loadMoreToots(): List<Toot> {
-        val newToots = helper.authedGet<List<Toot>>(ApiHelper.homeTimeline+"?max_id=${toots.last().id}",account.token.access_token) ?: throw InvalidObjectException("Failed to load more toots")
+        val newToots = helper.authedGet<List<Toot>>(ApiHelper.homeTimeline+"?max_id=${toots.last().id}",account.token.access_token)
         toots.addAll(newToots)
         return newToots
     }
